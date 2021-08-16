@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import Amplify from "aws-amplify";
 import { StyleSheet, Text, SafeAreaView } from 'react-native';
@@ -8,6 +7,15 @@ import {
   // @ts-ignore
   IDENTITY_POOL_ID, S3_BUCKET, COGNITO_OAUTH_DOMAIN, BASE_URL
 } from "react-native-dotenv";
+import MyProjects from './src/screens/MyProjects';
+import { NavigationContainer } from '@react-navigation/native';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
+
 
 const AMPLIFY_CONFIG = {
   // API Settings
@@ -39,12 +47,15 @@ const AMPLIFY_CONFIG = {
 
 Amplify.configure(AMPLIFY_CONFIG);
 
+const Drawer = createDrawerNavigator();
+
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      <Text>Hello World! {USER_POOL_ID}</Text>
-      <StatusBar style="auto" />
-    </SafeAreaView>
+    <NavigationContainer>
+      <Drawer.Navigator initialRouteName="My Projects">
+        <Drawer.Screen name="My Projects" component={MyProjects} />
+      </Drawer.Navigator>
+    </NavigationContainer>
   );
 }
 
