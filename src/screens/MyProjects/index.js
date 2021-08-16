@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, SafeAreaView, View } from 'react-native';
+import { StyleSheet, Text, SafeAreaView } from 'react-native';
 
 const MyProjects = () => {
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
+      <Text>My Projects</Text>
     </SafeAreaView>
   )
 }

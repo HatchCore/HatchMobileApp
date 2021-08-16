@@ -1,6 +1,7 @@
 import React from 'react';
 import Amplify from "aws-amplify";
-import { StyleSheet, Text, SafeAreaView } from 'react-native';
+import { StyleSheet } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import {
   // @ts-ignore
   GRAPHQL_ENDPOINT, AWS_REGION, API_AUTH_TYPE, USER_POOL_ID, USER_POOL_WEB_CLIENT_ID,
@@ -11,10 +12,8 @@ import MyProjects from './src/screens/MyProjects';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
 } from '@react-navigation/drawer';
+import PushNotifications from './src/screens/PushNotifications';
 
 
 const AMPLIFY_CONFIG = {
@@ -47,6 +46,14 @@ const AMPLIFY_CONFIG = {
 
 Amplify.configure(AMPLIFY_CONFIG);
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
 const Drawer = createDrawerNavigator();
 
 export default function App() {
@@ -54,6 +61,7 @@ export default function App() {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="My Projects">
         <Drawer.Screen name="My Projects" component={MyProjects} />
+        <Drawer.Screen name="Push Notifications" component={PushNotifications} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
