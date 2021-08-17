@@ -1,20 +1,49 @@
-import React from 'react';
-import Amplify from "aws-amplify";
-import { StyleSheet } from 'react-native';
-import * as Notifications from 'expo-notifications';
-import {
-  // @ts-ignore
-  GRAPHQL_ENDPOINT, AWS_REGION, API_AUTH_TYPE, USER_POOL_ID, USER_POOL_WEB_CLIENT_ID,
-  // @ts-ignore
-  IDENTITY_POOL_ID, S3_BUCKET, COGNITO_OAUTH_DOMAIN, BASE_URL
-} from "react-native-dotenv";
-import MyProjects from './src/screens/MyProjects';
-import { NavigationContainer } from '@react-navigation/native';
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useEffect, useState } from "react";
+
 import {
   createDrawerNavigator,
-} from '@react-navigation/drawer';
-import PushNotifications from './src/screens/PushNotifications';
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+} from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
+import Amplify, { Auth } from "aws-amplify";
+import {
+  Loading,
+  // @ts-ignore
+} from "aws-amplify-react-native";
+import * as Linking from "expo-linking";
+import * as Notifications from "expo-notifications";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+  // @ts-ignore
+  GRAPHQL_ENDPOINT,
+  // @ts-ignore
+  AWS_REGION,
+  // @ts-ignore
+  API_AUTH_TYPE,
+  // @ts-ignore
+  USER_POOL_ID,
+  // @ts-ignore
+  USER_POOL_WEB_CLIENT_ID,
+  // @ts-ignore
+  IDENTITY_POOL_ID,
+  // @ts-ignore
+  S3_BUCKET,
+  // @ts-ignore
+  COGNITO_OAUTH_DOMAIN,
+} from "react-native-dotenv";
 
+import { User } from "src/api/types/APISchema";
+import Screens from "src/constants/Screens";
+import { UserContext } from "src/context/UserContext";
+import SignInWithOAuth from "src/screens/SignInWithOAuth";
+import { CONTAINER } from "src/styles/layout/container";
+import { AuthUtils } from "src/utils/AuthUtils";
+
+import MyProjects from "./src/screens/MyProjects";
+import PushNotifications from "./src/screens/PushNotifications";
 
 const AMPLIFY_CONFIG = {
   // API Settings
@@ -36,8 +65,8 @@ const AMPLIFY_CONFIG = {
     oauth: {
       domain: COGNITO_OAUTH_DOMAIN,
       scope: ["email", "profile", "openid", "aws.cognito.signin.user.admin"],
-      redirectSignIn: `${BASE_URL}/login/oauth`,
-      redirectSignOut: `${BASE_URL}/`,
+      redirectSignIn: Linking.createURL(""),
+      redirectSignOut: Linking.createURL(""),
       responseType: "code", // or 'token', note that REFRESH token will only be generated when the responseType is code
     },
     cookieStorage: null,
@@ -45,6 +74,8 @@ const AMPLIFY_CONFIG = {
 };
 
 Amplify.configure(AMPLIFY_CONFIG);
+
+console.log(AMPLIFY_CONFIG);
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -56,22 +87,89 @@ Notifications.setNotificationHandler({
 
 const Drawer = createDrawerNavigator();
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Drawer.Navigator initialRouteName="My Projects">
-        <Drawer.Screen name="My Projects" component={MyProjects} />
-        <Drawer.Screen name="Push Notifications" component={PushNotifications} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
-}
-
 const styles = StyleSheet.create({
-  container: {
+  page: {
+    ...CONTAINER.PAGE,
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: "center",
   },
 });
+
+const AuthenticatedApp = () => {
+  return (
+    <UserContext.Consumer>
+      {({ setUser }) => {
+        return (
+          <NavigationContainer>
+            <Drawer.Navigator
+              initialRouteName={Screens.MY_PROJECTS}
+              drawerContent={(props) => {
+                return (
+                  <DrawerContentScrollView {...props}>
+                    <DrawerItemList {...props} />
+                    <DrawerItem
+                      label="Sign Out"
+                      onPress={() => AuthUtils.signOut(setUser)}
+                    />
+                  </DrawerContentScrollView>
+                );
+              }}
+            >
+              <Drawer.Screen
+                name={Screens.MY_PROJECTS}
+                component={MyProjects}
+              />
+              <Drawer.Screen
+                name={Screens.PUSH_NOTIFICATIONS}
+                component={PushNotifications}
+              />
+            </Drawer.Navigator>
+          </NavigationContainer>
+        );
+      }}
+    </UserContext.Consumer>
+  );
+};
+
+const App = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [pendingUserAuthCheck, setPendingUserAuthCheck] =
+    useState<boolean>(true);
+
+  const userContextValue = {
+    user,
+    setUser,
+  };
+
+  useEffect(() => {
+    const signInUserIfPossible = async () => {
+      const userData = await AuthUtils.signInUserIfPossible(setUser);
+      console.log(userData);
+      setPendingUserAuthCheck(false);
+    };
+
+    signInUserIfPossible();
+  }, []);
+
+  const renderApp = () => {
+    if (pendingUserAuthCheck) {
+      return (
+        <View style={styles.page}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+    if (user) {
+      return <AuthenticatedApp />;
+    }
+    return <SignInWithOAuth />;
+  };
+
+  return (
+    <UserContext.Provider value={userContextValue}>
+      {renderApp()}
+    </UserContext.Provider>
+  );
+};
+
+export default App;
