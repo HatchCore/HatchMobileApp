@@ -8,11 +8,7 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import Amplify, { Auth } from "aws-amplify";
-import {
-  Loading,
-  // @ts-ignore
-} from "aws-amplify-react-native";
+import Amplify from "aws-amplify";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -98,7 +94,7 @@ const styles = StyleSheet.create({
 const AuthenticatedApp = () => {
   return (
     <UserContext.Consumer>
-      {({ setUser }) => {
+      {({ user, setUser }) => {
         return (
           <NavigationContainer>
             <Drawer.Navigator
@@ -115,10 +111,9 @@ const AuthenticatedApp = () => {
                 );
               }}
             >
-              <Drawer.Screen
-                name={Screens.MY_PROJECTS}
-                component={MyProjects}
-              />
+              <Drawer.Screen name={Screens.MY_PROJECTS}>
+                {() => <MyProjects user={user} />}
+              </Drawer.Screen>
               <Drawer.Screen
                 name={Screens.PUSH_NOTIFICATIONS}
                 component={PushNotifications}

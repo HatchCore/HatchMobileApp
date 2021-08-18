@@ -65,7 +65,8 @@ const SignInWithOAuth = () => {
                 />
                 <Button
                   title="Sign In"
-                  onPress={async () => {
+                  onPress={async (event) => {
+                    event.preventDefault();
                     setPendingSignIn(true);
                     const user = await AuthUtils.signIn(
                       username,

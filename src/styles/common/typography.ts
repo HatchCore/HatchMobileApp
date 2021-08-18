@@ -8,6 +8,9 @@ export const FONT_SIZE = {
   H3: {
     fontSize: 18,
   },
+  P: {
+    fontSize: 16,
+  },
 };
 
 export const FONT_WEIGHT = {
