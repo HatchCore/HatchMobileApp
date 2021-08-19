@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, SafeAreaView, View } from "react-native";
 
@@ -27,7 +28,9 @@ interface MyProjectProps {
 const MyProjectsScreen: React.FunctionComponent<MyProjectProps> = (
   props: MyProjectProps
 ) => {
-  const { user, navigation } = props;
+  const { user } = props;
+
+  const navigation = useNavigation();
   const [projectsOwned, setProjectsOwned] = useState<
     ProjectWithReleaseMetadata[]
   >([]);
@@ -63,7 +66,11 @@ const MyProjectsScreen: React.FunctionComponent<MyProjectProps> = (
               key={project.project_id}
               style={styles.card}
               project={project}
-              handleViewProject={() => navigation.navigate(Stacks.PROJECT_ROOT)}
+              handleViewProject={() =>
+                navigation.navigate(Stacks.PROJECT_ROOT, {
+                  projectId: project.project_id,
+                })
+              }
             />
           );
         })}
@@ -73,7 +80,11 @@ const MyProjectsScreen: React.FunctionComponent<MyProjectProps> = (
               key={project.project_id}
               style={styles.card}
               project={project}
-              handleViewProject={() => navigation.navigate(Stacks.PROJECT_ROOT)}
+              handleViewProject={() =>
+                navigation.navigate(Stacks.PROJECT_ROOT, {
+                  projectId: project.project_id,
+                })
+              }
             />
           );
         })}

@@ -186,7 +186,7 @@ export default class ProjectQueries {
     }
   `;
 
-  static getProjectById = /* GraphQL */ `
+  static getProject = /* GraphQL */ `
     query GetProject($project_id: ID!) {
       getProject(project_id: $project_id) {
         updated_at
