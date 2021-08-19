@@ -5,7 +5,7 @@ import { Notification } from "expo-notifications";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, SafeAreaView, View, Button } from "react-native";
 
-import { PushNotificationUtils } from "../../utils/PushNotificationUtils";
+import { PushNotificationUtils } from "../../../utils/PushNotificationUtils";
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const PushNotifications = () => {
+const PushNotificationsScreen = () => {
   const [expoPushToken, setExpoPushToken] = useState<string | undefined>("");
   const [notification, setNotification] = useState<Notification>();
   const notificationListener = useRef<any>();
@@ -74,4 +74,4 @@ const PushNotifications = () => {
   );
 };
 
-export default PushNotifications;
+export default PushNotificationsScreen;

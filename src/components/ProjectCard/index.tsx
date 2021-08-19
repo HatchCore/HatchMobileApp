@@ -33,22 +33,20 @@ const styles = StyleSheet.create({
 interface ProjectCardProps {
   style?: ViewStyle;
   project: ProjectWithReleaseMetadata;
+  handleViewProject: () => void;
 }
 
 const ProjectCard: React.FunctionComponent<ProjectCardProps> = (
   props: ProjectCardProps
 ) => {
-  const { style, project } = props;
+  const { style, project, handleViewProject } = props;
 
   return (
     <View style={[style, styles.card]}>
       <Text style={styles.title as TextStyle}>{project.project_name}</Text>
       <S3Image style={styles.image} imgKey={project.thumbnail_img_uri} />
       <View style={styles.buttonContainer}>
-        <ViewMoreButton
-          title="View Project"
-          onPress={() => console.log("Go to chat")}
-        />
+        <ViewMoreButton title="View Project" onPress={handleViewProject} />
       </View>
     </View>
   );

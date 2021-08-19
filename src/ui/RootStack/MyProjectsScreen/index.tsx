@@ -9,6 +9,7 @@ import {
 } from "src/api/client/project";
 import { ProjectWithReleaseMetadata, User } from "src/api/types/APISchema";
 import ProjectCard from "src/components/ProjectCard";
+import Stacks from "src/constants/Stacks";
 import { MARGIN } from "src/styles/common/spacing";
 import { CONTAINER } from "src/styles/layout/container";
 
@@ -23,10 +24,10 @@ interface MyProjectProps {
   user: User | null;
 }
 
-const MyProjects: React.FunctionComponent<MyProjectProps> = (
+const MyProjectsScreen: React.FunctionComponent<MyProjectProps> = (
   props: MyProjectProps
 ) => {
-  const { user } = props;
+  const { user, navigation } = props;
   const [projectsOwned, setProjectsOwned] = useState<
     ProjectWithReleaseMetadata[]
   >([]);
@@ -62,6 +63,7 @@ const MyProjects: React.FunctionComponent<MyProjectProps> = (
               key={project.project_id}
               style={styles.card}
               project={project}
+              handleViewProject={() => navigation.navigate(Stacks.PROJECT_ROOT)}
             />
           );
         })}
@@ -71,6 +73,7 @@ const MyProjects: React.FunctionComponent<MyProjectProps> = (
               key={project.project_id}
               style={styles.card}
               project={project}
+              handleViewProject={() => navigation.navigate(Stacks.PROJECT_ROOT)}
             />
           );
         })}
@@ -79,4 +82,4 @@ const MyProjects: React.FunctionComponent<MyProjectProps> = (
   );
 };
 
-export default MyProjects;
+export default MyProjectsScreen;

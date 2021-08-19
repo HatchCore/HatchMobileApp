@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const SignInWithOAuth = () => {
+const SignInWithOAuthScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [pendingSignIn, setPendingSignIn] = useState(false);
@@ -101,4 +101,4 @@ const SignInWithOAuth = () => {
   );
 };
 
-export default SignInWithOAuth;
+export default SignInWithOAuthScreen;

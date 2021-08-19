@@ -1,13 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from "react";
 
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItem,
-  DrawerItemList,
-} from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Amplify from "aws-amplify";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
@@ -30,16 +25,16 @@ import {
   // @ts-ignore
   COGNITO_OAUTH_DOMAIN,
 } from "react-native-dotenv";
+import { Button } from "react-native-elements/dist/buttons/Button";
 
 import { User } from "src/api/types/APISchema";
-import Screens from "src/constants/Screens";
+import Stacks from "src/constants/Stacks";
 import { UserContext } from "src/context/UserContext";
-import SignInWithOAuth from "src/screens/SignInWithOAuth";
 import { CONTAINER } from "src/styles/layout/container";
+import ProjectStack from "src/ui/ProjectStack";
+import RootStack from "src/ui/RootStack";
+import SignInWithOAuthScreen from "src/ui/SignInWithOAuthScreen";
 import { AuthUtils } from "src/utils/AuthUtils";
-
-import MyProjects from "./src/screens/MyProjects";
-import PushNotifications from "./src/screens/PushNotifications";
 
 const AMPLIFY_CONFIG = {
   // API Settings
@@ -81,7 +76,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator();
 
 const styles = StyleSheet.create({
   page: {
@@ -93,36 +88,16 @@ const styles = StyleSheet.create({
 
 const AuthenticatedApp = () => {
   return (
-    <UserContext.Consumer>
-      {({ user, setUser }) => {
-        return (
-          <NavigationContainer>
-            <Drawer.Navigator
-              initialRouteName={Screens.MY_PROJECTS}
-              drawerContent={(props) => {
-                return (
-                  <DrawerContentScrollView {...props}>
-                    <DrawerItemList {...props} />
-                    <DrawerItem
-                      label="Sign Out"
-                      onPress={() => AuthUtils.signOut(setUser)}
-                    />
-                  </DrawerContentScrollView>
-                );
-              }}
-            >
-              <Drawer.Screen name={Screens.MY_PROJECTS}>
-                {() => <MyProjects user={user} />}
-              </Drawer.Screen>
-              <Drawer.Screen
-                name={Screens.PUSH_NOTIFICATIONS}
-                component={PushNotifications}
-              />
-            </Drawer.Navigator>
-          </NavigationContainer>
-        );
-      }}
-    </UserContext.Consumer>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name={Stacks.ROOT}
+          component={RootStack}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name={Stacks.PROJECT_ROOT} component={ProjectStack} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
@@ -157,7 +132,7 @@ const App = () => {
     if (user) {
       return <AuthenticatedApp />;
     }
-    return <SignInWithOAuth />;
+    return <SignInWithOAuthScreen />;
   };
 
   return (
