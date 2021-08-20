@@ -1,6 +1,11 @@
 import React from "react";
 
-import { StyleSheet, TextStyle, View, ViewStyle } from "react-native";
+import {
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 import { Text } from "react-native-elements";
 
 import { MARGIN, PADDING } from "src/styles/common/spacing";
@@ -24,17 +29,21 @@ interface ChannelListItemProps {
   style?: ViewStyle;
   name: string;
   active?: boolean;
+  handleGoToChatChannel: () => void;
 }
 
 const ChannelListItem: React.FunctionComponent<ChannelListItemProps> = (
   props: ChannelListItemProps
 ) => {
-  const { style, name, active } = props;
+  const { style, name, active, handleGoToChatChannel } = props;
 
   return (
-    <View style={[style, styles.listItem]}>
+    <TouchableOpacity
+      style={[style, styles.listItem]}
+      onPress={handleGoToChatChannel}
+    >
       <Text style={[active && styles.active, styles.name]}>{name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Amplify from "aws-amplify";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
@@ -25,14 +24,11 @@ import {
   // @ts-ignore
   COGNITO_OAUTH_DOMAIN,
 } from "react-native-dotenv";
-import { Button } from "react-native-elements/dist/buttons/Button";
 
 import { User } from "src/api/types/APISchema";
-import Stacks from "src/constants/Stacks";
 import { UserContext } from "src/context/UserContext";
 import { CONTAINER } from "src/styles/layout/container";
-import ProjectStack from "src/ui/ProjectStack";
-import RootStack from "src/ui/RootStack";
+import RootTabNav from "src/ui/RootTabs";
 import SignInWithOAuthScreen from "src/ui/SignInWithOAuthScreen";
 import { AuthUtils } from "src/utils/AuthUtils";
 
@@ -76,8 +72,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const Stack = createNativeStackNavigator();
-
 const styles = StyleSheet.create({
   page: {
     ...CONTAINER.PAGE,
@@ -89,14 +83,7 @@ const styles = StyleSheet.create({
 const AuthenticatedApp = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name={Stacks.ROOT}
-          component={RootStack}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name={Stacks.PROJECT_ROOT} component={ProjectStack} />
-      </Stack.Navigator>
+      <RootTabNav />
     </NavigationContainer>
   );
 };

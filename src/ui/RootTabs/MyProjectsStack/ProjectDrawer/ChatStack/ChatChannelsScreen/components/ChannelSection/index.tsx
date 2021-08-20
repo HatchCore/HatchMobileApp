@@ -1,7 +1,9 @@
 import React from "react";
 
+import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, TextStyle, View, ViewStyle } from "react-native";
 
+import Screens from "src/constants/Screens";
 import { MARGIN } from "src/styles/common/spacing";
 import { FONT_SIZE } from "src/styles/common/typography";
 
@@ -33,6 +35,8 @@ const ChannelSection: React.FunctionComponent<ChannelSectionProps> = (
 ) => {
   const { style, name, chatChannelIdMap, activeChannelId } = props;
 
+  const navigation = useNavigation();
+
   return (
     <View style={[style, styles.section]}>
       <SectionHeader style={styles.header} name={name} />
@@ -41,8 +45,14 @@ const ChannelSection: React.FunctionComponent<ChannelSectionProps> = (
           Object.entries(chatChannelIdMap).map(([chatChannelId, channel]) => {
             return (
               <ChannelListItem
+                key={channel.chat_channel_id}
                 name={channel.channel_name}
                 active={activeChannelId === chatChannelId}
+                handleGoToChatChannel={() =>
+                  navigation.navigate(Screens.CHAT_WINDOW, {
+                    chatChannelId,
+                  })
+                }
               />
             );
           })}

@@ -10,7 +10,8 @@ import {
 } from "src/api/client/project";
 import { ProjectWithReleaseMetadata, User } from "src/api/types/APISchema";
 import ProjectCard from "src/components/ProjectCard";
-import Stacks from "src/constants/Stacks";
+import Stacks from "src/constants/Navigators";
+import Navigators from "src/constants/Navigators";
 import { MARGIN } from "src/styles/common/spacing";
 import { CONTAINER } from "src/styles/layout/container";
 
@@ -67,7 +68,7 @@ const MyProjectsScreen: React.FunctionComponent<MyProjectProps> = (
               style={styles.card}
               project={project}
               handleViewProject={() =>
-                navigation.navigate(Stacks.PROJECT_ROOT, {
+                navigation.navigate(Navigators.PROJECT, {
                   projectId: project.project_id,
                 })
               }
@@ -81,7 +82,7 @@ const MyProjectsScreen: React.FunctionComponent<MyProjectProps> = (
               style={styles.card}
               project={project}
               handleViewProject={() =>
-                navigation.navigate(Stacks.PROJECT_ROOT, {
+                navigation.navigate(Navigators.PROJECT, {
                   projectId: project.project_id,
                 })
               }

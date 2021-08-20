@@ -6,14 +6,15 @@ import { useRoute } from "@react-navigation/native";
 
 import { getProject } from "src/api/client/project";
 import { Project } from "src/api/types/APISchema";
-import Stacks from "src/constants/Stacks";
+import KeyboardAvoidingComponent from "src/components/KeyboardAvoidingComponent";
+import Navigators from "src/constants/Navigators";
 import { UserContext } from "src/context/UserContext";
 
 import ChatStack from "./ChatStack";
 
 const Drawer = createDrawerNavigator();
 
-const ProjectStack = () => {
+const ProjectDrawer = () => {
   const route = useRoute();
 
   const [project, setProject] = useState<Project | null>(null);
@@ -30,12 +31,13 @@ const ProjectStack = () => {
       fetchProject();
     }
   }, [route.params]);
+
   return (
     <UserContext.Consumer>
       {({ user }) => {
         return (
-          <Drawer.Navigator initialRouteName={Stacks.CHAT}>
-            <Drawer.Screen name={Stacks.CHAT}>
+          <Drawer.Navigator initialRouteName={Navigators.CHAT}>
+            <Drawer.Screen name={Navigators.CHAT}>
               {() => <ChatStack project={project} user={user} />}
             </Drawer.Screen>
           </Drawer.Navigator>
@@ -45,4 +47,4 @@ const ProjectStack = () => {
   );
 };
 
-export default ProjectStack;
+export default ProjectDrawer;
