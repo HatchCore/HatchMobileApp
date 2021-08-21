@@ -38,8 +38,9 @@ const KeyboardAvoidingComponent: React.FunctionComponent<KeyboardAvoidingCompone
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={
-          headerHeight * 2 +
-          (StatusBar.currentHeight ? StatusBar.currentHeight : 20)
+          headerHeight * 2
+          // headerHeight * 2 +
+          // (StatusBar.currentHeight ? StatusBar.currentHeight : 20)
         }
         style={styles.container}
       >

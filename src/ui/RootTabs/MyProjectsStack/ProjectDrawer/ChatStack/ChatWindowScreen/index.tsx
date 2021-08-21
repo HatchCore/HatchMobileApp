@@ -68,16 +68,14 @@ const ChatWindowScreen: React.FunctionComponent<ChatWindowScreenProps> = (
   const [messageInput, setMessageInput] = useState<string>("");
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.columnContainer}>
-        <MessageContainer style={styles.messageContainer} />
-        <InputBox
-          style={styles.inputContainer}
-          onChangeText={setMessageInput}
-          value={messageInput}
-        />
-      </View>
-    </SafeAreaView>
+    <View style={styles.columnContainer}>
+      <MessageContainer style={styles.messageContainer} user={user} />
+      <InputBox
+        style={styles.inputContainer}
+        onChangeText={setMessageInput}
+        value={messageInput}
+      />
+    </View>
   );
 };
 

@@ -1,9 +1,9 @@
 export default class Navigators {
-  static ROOT = "Root";
+  static ROOT = "Root Tabs";
 
-  static MY_PROJECTS = "MyProjects";
+  static MY_PROJECTS = "My Projects Stack";
 
-  static PROJECT = "Project";
+  static PROJECT = "Project Drawer";
 
-  static CHAT = "Chat";
+  static CHAT = "Chat Stack";
 }

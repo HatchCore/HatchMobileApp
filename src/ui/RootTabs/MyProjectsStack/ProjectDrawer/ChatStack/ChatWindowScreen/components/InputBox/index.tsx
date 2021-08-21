@@ -16,8 +16,8 @@ import { BRAND, COLORS, THEME } from "src/styles/common/theme";
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    padding: PADDING.S,
-    // height: 100,
+    padding: PADDING.XS,
+    height: "100%",
     // flex: 0,
     justifyContent: "flex-end",
     // alignItems: "stretch",
@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
     // alignItems: "stretch",
   },
   inputContainer: {
+    flex: 9,
     // flexGrow: 1,
     backgroundColor: COLORS.BORDER_GRAY,
     // height: 70,
     height: "100%",
     marginRight: MARGIN.S,
-    flex: 9,
     borderRadius: THEME.BORDER_RADIUS,
     padding: PADDING.S,
     maxHeight: 100,
