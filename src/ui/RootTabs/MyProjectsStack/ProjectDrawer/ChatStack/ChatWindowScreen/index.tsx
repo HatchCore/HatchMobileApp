@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { v4 as uuidv4 } from "uuid";
 
+import { createChatMessage } from "src/api/client/project";
 import {
   ChatChannel,
   ChatChannelMetadata,
@@ -48,32 +50,33 @@ const ChatWindowScreen: React.FunctionComponent<ChatWindowScreenProps> = (
 ) => {
   const { user } = props;
 
-  // const route = useRoute();
-
-  // const [project, setProject] = useState<ChatChannel | null>(null);
-
-  // useEffect(() => {
-  //   if (route?.params?.projectId) {
-  //     const fetchProject = async () => {
-  //       const returnedProject = await getProject(route.params.projectId);
-  //       setProject(returnedProject);
-
-  //       console.log("Got project");
-  //       console.log(returnedProject);
-  //     };
-  //     fetchProject();
-  //   }
-  // }, [route.params]);
+  const route = useRoute();
 
   const [messageInput, setMessageInput] = useState<string>("");
+
+  const sendMessage = async (message: string) => {
+    const chatMessageId = uuidv4();
+    const sentMessage = await createChatMessage(
+      chatMessageId,
+      user.user_id,
+      route?.params?.chatChannelId,
+      message,
+      []
+    );
+
+    setMessageInput("");
+    return sentMessage;
+  };
 
   return (
     <View style={styles.columnContainer}>
       <MessageContainer style={styles.messageContainer} user={user} />
       <InputBox
         style={styles.inputContainer}
-        onChangeText={setMessageInput}
+        user={user}
         value={messageInput}
+        onChangeText={setMessageInput}
+        sendMessage={sendMessage}
       />
     </View>
   );

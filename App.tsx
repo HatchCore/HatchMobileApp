@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import "react-native-get-random-values";
 import React, { useEffect, useState } from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -25,12 +26,15 @@ import {
   COGNITO_OAUTH_DOMAIN,
 } from "react-native-dotenv";
 
+import createUserPushNotificationToken from "src/api/client/common/createPushNotificationToken";
 import { User } from "src/api/types/APISchema";
+import { PushNotificationTokenContext } from "src/context/PushNotificationToken";
 import { UserContext } from "src/context/UserContext";
 import { CONTAINER } from "src/styles/layout/container";
 import RootTabNav from "src/ui/RootTabs";
 import SignInWithOAuthScreen from "src/ui/SignInWithOAuthScreen";
 import { AuthUtils } from "src/utils/AuthUtils";
+import { PushNotificationUtils } from "src/utils/PushNotificationUtils";
 
 const AMPLIFY_CONFIG = {
   // API Settings
@@ -90,12 +94,18 @@ const AuthenticatedApp = () => {
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | undefined>(undefined);
   const [pendingUserAuthCheck, setPendingUserAuthCheck] =
     useState<boolean>(true);
 
   const userContextValue = {
     user,
     setUser,
+  };
+
+  const pushNotificationTokenValue = {
+    token,
+    setToken,
   };
 
   useEffect(() => {
@@ -107,6 +117,20 @@ const App = () => {
 
     signInUserIfPossible();
   }, []);
+
+  useEffect(() => {
+    PushNotificationUtils.registerForPushNotificationsAsync().then(
+      async (pushToken) => {
+        setToken(pushToken);
+        const pushNotificationToken = await createUserPushNotificationToken(
+          user?.user_id,
+          pushToken
+        );
+        console.log(`Stored: ${pushNotificationToken}`);
+        console.log(`For: ${user?.user_id}, ${pushToken}`);
+      }
+    );
+  }, [user?.user_id]);
 
   const renderApp = () => {
     if (pendingUserAuthCheck) {
@@ -124,7 +148,9 @@ const App = () => {
 
   return (
     <UserContext.Provider value={userContextValue}>
-      {renderApp()}
+      <PushNotificationTokenContext.Provider value={pushNotificationTokenValue}>
+        {renderApp()}
+      </PushNotificationTokenContext.Provider>
     </UserContext.Provider>
   );
 };

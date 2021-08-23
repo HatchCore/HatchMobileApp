@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import { useRoute } from "@react-navigation/native";
 import {
@@ -10,7 +10,10 @@ import {
 } from "react-native";
 import { Text } from "react-native-elements";
 
-import { getChatChannelMessages } from "src/api/client/project";
+import {
+  beginChatMessageSubscriptionInChannel,
+  getChatChannelMessages,
+} from "src/api/client/project";
 import {
   ChatChannel,
   ChatMessageWithMetadata,
@@ -41,38 +44,63 @@ const MessageContainer: React.FunctionComponent<MessageContainerProps> = (
   const { style, user } = props;
 
   const route = useRoute();
+  const scrollViewRef = useRef(null);
 
-  const [chatMessages, setChatMessages] = useState<
-    ChatMessageWithMetadata[] | null
-  >(null);
+  const [channelMessages, setChannelMessages] = useState<
+    ChatMessageWithMetadata[]
+  >([]);
 
   useEffect(() => {
     if (route?.params?.chatChannelId) {
-      const fetchChatMessages = async () => {
+      const fetchChannelMessages = async () => {
         const chatChannelMessages = await getChatChannelMessages(
           route.params.chatChannelId
         );
-        setChatMessages(chatChannelMessages);
+        setChannelMessages(chatChannelMessages);
       };
-      fetchChatMessages();
+      fetchChannelMessages();
     }
   }, [route.params]);
 
+  useEffect(() => {
+    if (route?.params?.chatChannelId) {
+      const subscription = beginChatMessageSubscriptionInChannel(
+        route.params.chatChannelId,
+        (response) => {
+          const { value } = response;
+          const incomingMessage = value.data.onCreateChatMessageInChannel;
+          console.debug("Got incoming message in channel");
+          console.debug(incomingMessage);
+          setChannelMessages([...channelMessages, incomingMessage]);
+        }
+      );
+
+      return () => subscription.unsubscribe();
+    }
+
+    return () => null;
+  }, [channelMessages, route?.params?.chatChannelId, user?.user_id]);
+
   return (
-    <View style={[style, styles.container]}>
-      <FlatList
-        data={chatMessages}
-        renderItem={({ item }) => {
-          return (
-            <ChatMessageBubble
-              message={item.chat_message}
-              fromMe={item.user_id === user?.user_id}
-            />
-          );
-        }}
-        keyExtractor={(item) => item.chat_message_id}
-      />
-    </View>
+    <ScrollView
+      style={[style, styles.container]}
+      ref={scrollViewRef}
+      onContentSizeChange={() => {
+        if (scrollViewRef?.current) {
+          const scrollRef = scrollViewRef.current;
+          scrollRef?.scrollToEnd({ animated: false });
+        }
+      }}
+    >
+      {channelMessages?.map((message) => {
+        return (
+          <ChatMessageBubble
+            message={message.chat_message}
+            fromMe={message.user_id === user?.user_id}
+          />
+        );
+      })}
+    </ScrollView>
   );
 };
 

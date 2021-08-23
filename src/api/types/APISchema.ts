@@ -285,3 +285,8 @@ export interface ProjectUserActivity {
   user_id: string;
   last_activity: string;
 }
+
+export interface UserPushNotificationToken {
+  user_id: string;
+  push_notification_token: string;
+}

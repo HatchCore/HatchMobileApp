@@ -8,7 +8,10 @@ import {
   ViewStyle,
 } from "react-native";
 import { Button, Icon } from "react-native-elements";
+import { v4 as uuidv4 } from "uuid";
 
+import { createChatMessage } from "src/api/client/project";
+import { User } from "src/api/types/APISchema";
 import AutoExpandingTextInput from "src/components/AutoExpandingTextInput";
 import { MARGIN, PADDING } from "src/styles/common/spacing";
 import { BRAND, COLORS, THEME } from "src/styles/common/theme";
@@ -58,34 +61,40 @@ const styles = StyleSheet.create({
 
 interface InputBoxProps {
   style?: ViewStyle;
-  onChangeText: (text: string) => void;
+  user: User | null;
   value: string;
+  onChangeText: (text: string) => void;
+  sendMessage: (message: string) => void;
 }
 
 const InputBox: React.FunctionComponent<InputBoxProps> = (
   props: InputBoxProps
 ) => {
-  const { style, value, onChangeText } = props;
+  const { style, user, value, onChangeText, sendMessage } = props;
+
   return (
     <View style={[style, styles.container]}>
       <View style={styles.rowContainer}>
         {/* <View style={styles.inputContainer}>
           <TextInput multiline onChangeText={onChangeText} value={value} />
         </View> */}
-        {/* <TextInput
+        <TextInput
           style={styles.inputContainer}
           multiline
-          onChangeText={onChangeText}
           value={value}
-        /> */}
-        <AutoExpandingTextInput
+          onChangeText={onChangeText}
+        />
+        {/* <AutoExpandingTextInput
           style={styles.inputContainer}
           // multiline
           onChangeText={onChangeText}
           value={value}
-        />
+        /> */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => sendMessage(value)}
+          >
             <Icon name="send" size={24} color="white" />
           </TouchableOpacity>
         </View>
