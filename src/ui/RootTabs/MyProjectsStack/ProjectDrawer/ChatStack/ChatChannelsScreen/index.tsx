@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { StyleSheet, TextStyle, View } from "react-native";
+import { ScrollView, StyleSheet, TextStyle, View } from "react-native";
 
 import { getChatChannelMetadataForUser } from "src/api/client/project/chat";
 import { Project, User } from "src/api/types/APISchema";
@@ -74,20 +74,22 @@ const ChatChannelsScreen: React.FunctionComponent<ChatChannelsScreenProps> = (
     }
   }, [project, user]);
   return (
-    <View style={styles.page}>
-      <ChannelSection
-        name="Public Channels"
-        chatChannelIdMap={chatChannelMapGroups.publicChannelIdMap}
-      />
-      <ChannelSection
-        name="Private Channels"
-        chatChannelIdMap={chatChannelMapGroups.privateChannelIdMap}
-      />
-      <ChannelSection
-        name="Direct Messages"
-        chatChannelIdMap={chatChannelMapGroups.directMessageChannelIdMap}
-      />
-    </View>
+    <ScrollView>
+      <View style={styles.page}>
+        <ChannelSection
+          name="Public Channels"
+          chatChannelIdMap={chatChannelMapGroups.publicChannelIdMap}
+        />
+        <ChannelSection
+          name="Private Channels"
+          chatChannelIdMap={chatChannelMapGroups.privateChannelIdMap}
+        />
+        <ChannelSection
+          name="Direct Messages"
+          chatChannelIdMap={chatChannelMapGroups.directMessageChannelIdMap}
+        />
+      </View>
+    </ScrollView>
   );
 };
 

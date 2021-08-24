@@ -1,24 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import { useRoute } from "@react-navigation/native";
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from "react-native";
-import { Text } from "react-native-elements";
+import { ScrollView, StyleSheet, View, ViewStyle } from "react-native";
 
 import {
   beginChatMessageSubscriptionInChannel,
   getChatChannelMessages,
 } from "src/api/client/project";
-import {
-  ChatChannel,
-  ChatMessageWithMetadata,
-  User,
-} from "src/api/types/APISchema";
+import { ChatMessageWithMetadata, User } from "src/api/types/APISchema";
 import { PADDING } from "src/styles/common/spacing";
 
 import ChatMessageBubble from "./components/ChatMessageBubble";

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, SafeAreaView, View } from "react-native";
+import { StyleSheet, SafeAreaView, View, ScrollView } from "react-native";
 
 import {
   getProjectsCollaboratedButNotOwnedWithReleaseMetadata,
@@ -60,36 +60,38 @@ const MyProjectsScreen: React.FunctionComponent<MyProjectProps> = (
   return (
     <SafeAreaView>
       <StatusBar />
-      <View style={styles.page}>
-        {projectsOwned.map((project) => {
-          return (
-            <ProjectCard
-              key={project.project_id}
-              style={styles.card}
-              project={project}
-              handleViewProject={() =>
-                navigation.navigate(Navigators.PROJECT, {
-                  projectId: project.project_id,
-                })
-              }
-            />
-          );
-        })}
-        {projectsCollaborated.map((project) => {
-          return (
-            <ProjectCard
-              key={project.project_id}
-              style={styles.card}
-              project={project}
-              handleViewProject={() =>
-                navigation.navigate(Navigators.PROJECT, {
-                  projectId: project.project_id,
-                })
-              }
-            />
-          );
-        })}
-      </View>
+      <ScrollView>
+        <View style={styles.page}>
+          {projectsOwned.map((project) => {
+            return (
+              <ProjectCard
+                key={project.project_id}
+                style={styles.card}
+                project={project}
+                handleViewProject={() =>
+                  navigation.navigate(Navigators.PROJECT, {
+                    projectId: project.project_id,
+                  })
+                }
+              />
+            );
+          })}
+          {projectsCollaborated.map((project) => {
+            return (
+              <ProjectCard
+                key={project.project_id}
+                style={styles.card}
+                project={project}
+                handleViewProject={() =>
+                  navigation.navigate(Navigators.PROJECT, {
+                    projectId: project.project_id,
+                  })
+                }
+              />
+            );
+          })}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

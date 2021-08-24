@@ -2,15 +2,10 @@ import React, { useState } from "react";
 
 import { useRoute } from "@react-navigation/native";
 import { StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { v4 as uuidv4 } from "uuid";
 
 import { createChatMessage } from "src/api/client/project";
-import {
-  ChatChannel,
-  ChatChannelMetadata,
-  User,
-} from "src/api/types/APISchema";
+import { User } from "src/api/types/APISchema";
 
 import InputBox from "./components/InputBox";
 import MessageContainer from "./components/MessageContainer";

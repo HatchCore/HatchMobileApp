@@ -17,6 +17,8 @@ import {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
   },
   inner: {
     // padding: PADDING.M,
@@ -43,6 +45,7 @@ const KeyboardAvoidingComponent: React.FunctionComponent<KeyboardAvoidingCompone
           // (StatusBar.currentHeight ? StatusBar.currentHeight : 20)
         }
         style={styles.container}
+        enabled
       >
         <SafeAreaView style={styles.container}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
